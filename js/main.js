@@ -497,8 +497,402 @@ function handleResize() {
   }
 }
 
+// 资历文件上传功能
+let uploadedFiles = [];
+let fileIdCounter = 1;
+
+// 初始化资历文件上传功能
+function initFileUpload() {
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const filesGrid = document.getElementById('filesGrid');
+
+  if (dropZone && fileInput) {
+    // 点击上传
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    // 拖放上传
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    
+    // 文件选择
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+  }
+
+  // 渲染示例文件
+  renderSampleFiles();
+}
+
+// 处理文件上传
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    uploadFile(file);
+  });
+}
+
+// 上传文件
+function uploadFile(file) {
+  const uploadProgress = document.getElementById('uploadProgress');
+  const progressFileName = document.getElementById('progressFileName');
+  const progressPercent = document.getElementById('progressPercent');
+  const progressBar = document.getElementById('progressBar');
+
+  if (uploadProgress) {
+    uploadProgress.classList.remove('hidden');
+    progressFileName.textContent = file.name;
+    progressPercent.textContent = '0%';
+    progressBar.style.width = '0%';
+  }
+
+  // 模拟上传进度
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 5;
+    if (progress <= 100) {
+      if (progressPercent) progressPercent.textContent = progress + '%';
+      if (progressBar) progressBar.style.width = progress + '%';
+    } else {
+      clearInterval(interval);
+      if (uploadProgress) uploadProgress.classList.add('hidden');
+      
+      // 添加到上传文件列表
+      const fileItem = {
+        id: fileIdCounter++,
+        name: file.name,
+        size: formatFileSize(file.size),
+        type: file.type,
+        uploadedAt: new Date().toLocaleString(),
+        url: URL.createObjectURL(file)
+      };
+      
+      uploadedFiles.unshift(fileItem);
+      renderFiles();
+      showToast('文件上传成功！');
+    }
+  }, 100);
+}
+
+// 格式化文件大小
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 获取文件图标
+function getFileIcon(type) {
+  if (type.includes('pdf')) {
+    return { class: 'pdf', icon: 'fas fa-file-pdf' };
+  } else if (type.includes('image')) {
+    return { class: 'image', icon: 'fas fa-file-image' };
+  } else if (type.includes('word') || type.includes('doc')) {
+    return { class: 'doc', icon: 'fas fa-file-word' };
+  } else {
+    return { class: 'other', icon: 'fas fa-file' };
+  }
+}
+
+// 渲染文件列表
+function renderFiles() {
+  const filesGrid = document.getElementById('filesGrid');
+  if (filesGrid) {
+    filesGrid.innerHTML = uploadedFiles.map(file => {
+      const fileIcon = getFileIcon(file.type);
+      return `
+        <div class="file-card">
+          <div class="file-icon ${fileIcon.class}">
+            <i class="${fileIcon.icon}"></i>
+          </div>
+          <div class="file-info">
+            <h4 class="file-name">${file.name}</h4>
+            <p class="file-meta">大小: ${file.size}</p>
+            <p class="file-meta">上传时间: ${file.uploadedAt}</p>
+          </div>
+          <div class="file-actions">
+            <button class="file-action-btn view" onclick="previewFile(${file.id})">
+              <i class="fas fa-eye"></i>
+              <span>预览</span>
+            </button>
+            <button class="file-action-btn delete" onclick="deleteFile(${file.id})">
+              <i class="fas fa-trash"></i>
+              <span>删除</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// 预览文件
+function previewFile(id) {
+  const file = uploadedFiles.find(f => f.id === id);
+  if (file) {
+    window.open(file.url, '_blank');
+  }
+}
+
+// 删除文件
+function deleteFile(id) {
+  if (confirm('确定要删除此文件吗？')) {
+    uploadedFiles = uploadedFiles.filter(f => f.id !== id);
+    renderFiles();
+    showToast('文件已删除');
+  }
+}
+
+// 渲染示例文件
+function renderSampleFiles() {
+  const sampleFiles = [
+    {
+      id: fileIdCounter++,
+      name: '熊氏宗族谱全本.pdf',
+      size: '2.5 MB',
+      type: 'application/pdf',
+      uploadedAt: '2024-03-01 10:30',
+      url: '#'
+    },
+    {
+      id: fileIdCounter++,
+      name: '熊斯创家族照片.jpg',
+      size: '1.2 MB',
+      type: 'image/jpeg',
+      uploadedAt: '2024-02-28 14:15',
+      url: '#'
+    },
+    {
+      id: fileIdCounter++,
+      name: '熊氏家训整理.docx',
+      size: '850 KB',
+      type: 'application/msword',
+      uploadedAt: '2024-02-25 09:45',
+      url: '#'
+    }
+  ];
+  
+  uploadedFiles = sampleFiles;
+  renderFiles();
+}
+
+// GitHub版本控制功能
+let githubCommits = [];
+let commitIdCounter = 1;
+
+// 初始化GitHub功能
+function initGitHub() {
+  // 渲染示例提交历史
+  renderGitHubHistory();
+}
+
+// 上传代码到GitHub
+function uploadToGitHub() {
+  const repoUrl = document.getElementById('githubRepoUrl').value.trim();
+  const branch = document.getElementById('githubBranch').value.trim() || 'main';
+  const commitMessage = document.getElementById('githubCommitMessage').value.trim();
+
+  if (!repoUrl) {
+    showToast('请输入GitHub仓库URL');
+    return;
+  }
+
+  if (!commitMessage) {
+    showToast('请输入提交信息');
+    return;
+  }
+
+  // 模拟上传过程
+  showToast('正在上传代码...');
+  
+  setTimeout(() => {
+    // 添加新的提交记录
+    const newCommit = {
+      id: commitIdCounter++,
+      message: commitMessage,
+      author: currentUser ? currentUser.name : '熊氏族人',
+      date: new Date().toLocaleString(),
+      repo: repoUrl,
+      branch: branch
+    };
+    
+    githubCommits.unshift(newCommit);
+    renderGitHubHistory();
+    
+    // 清空表单
+    document.getElementById('githubCommitMessage').value = '';
+    
+    showToast('代码上传成功！');
+  }, 1500);
+}
+
+// 检查GitHub状态
+function checkGitHubStatus() {
+  showToast('正在检查GitHub状态...');
+  
+  setTimeout(() => {
+    showToast('GitHub连接正常！');
+  }, 1000);
+}
+
+// 渲染GitHub提交历史
+function renderGitHubHistory() {
+  const container = document.getElementById('githubHistory');
+  if (container) {
+    if (githubCommits.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-8">
+          <i class="fab fa-github text-4xl text-gold-500/30 mb-4"></i>
+          <p class="text-amber-100/60">暂无提交历史</p>
+        </div>
+      `;
+    } else {
+      container.innerHTML = githubCommits.map(commit => `
+        <div class="github-history-item">
+          <h4 class="commit-message">${commit.message}</h4>
+          <div class="commit-meta">
+            <span>${commit.author}</span> · <span>${commit.date}</span>
+          </div>
+          <div class="commit-details">
+            <span>仓库: ${commit.repo}</span> · <span>分支: ${commit.branch}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// 亲家联系功能
+let relativesData = [];
+let relativeIdCounter = 1;
+
+// 初始化亲家联系功能
+function initRelatives() {
+  // 渲染示例亲家数据
+  renderSampleRelatives();
+}
+
+// 打开添加亲家模态框
+function openAddRelativeModal() {
+  showToast('添加亲家功能开发中...');
+}
+
+// 渲染示例亲家数据
+function renderSampleRelatives() {
+  const sampleRelatives = [
+    {
+      id: relativeIdCounter++,
+      name: '李明',
+      relationship: '长女熊传英之夫',
+      phone: '13800138000',
+      email: 'liming@example.com',
+      address: '江西省南昌市溪霞镇',
+      birthday: '1956-08-15',
+      familyMembers: ['李明', '熊传英', '李明辉', '李明霞']
+    },
+    {
+      id: relativeIdCounter++,
+      name: '王强',
+      relationship: '二女熊传秀之夫',
+      phone: '13900139000',
+      email: 'wangqiang@example.com',
+      address: '江西省南昌市溪霞镇',
+      birthday: '1960-05-20',
+      familyMembers: ['王强', '熊传秀', '王小明']
+    }
+  ];
+  
+  relativesData = sampleRelatives;
+  renderRelatives();
+}
+
+// 渲染亲家列表
+function renderRelatives() {
+  const container = document.getElementById('relativesGrid');
+  if (container) {
+    container.innerHTML = relativesData.map(relative => `
+      <div class="relative-card">
+        <div class="relative-header">
+          <div class="relative-avatar">
+            ${relative.name.charAt(0)}
+          </div>
+          <div class="relative-info">
+            <h3>${relative.name}</h3>
+            <p>${relative.relationship}</p>
+          </div>
+        </div>
+        <div class="relative-contact">
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <span>${relative.phone}</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>${relative.email}</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>${relative.address}</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-birthday-cake"></i>
+            <span>${relative.birthday}</span>
+          </div>
+        </div>
+        <div class="relative-actions">
+          <button class="relative-action-btn edit" onclick="editRelative(${relative.id})">
+            <i class="fas fa-edit"></i>
+            <span>编辑</span>
+          </button>
+          <button class="relative-action-btn delete" onclick="deleteRelative(${relative.id})">
+            <i class="fas fa-trash"></i>
+            <span>删除</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+// 编辑亲家信息
+function editRelative(id) {
+  showToast('编辑亲家功能开发中...');
+}
+
+// 删除亲家信息
+function deleteRelative(id) {
+  if (confirm('确定要删除此亲家信息吗？')) {
+    relativesData = relativesData.filter(r => r.id !== id);
+    renderRelatives();
+    showToast('亲家信息已删除');
+  }
+}
+
 // 监听窗口大小变化
 window.addEventListener('resize', handleResize);
 
 // 初始化响应式
 handleResize();
+
+// 初始化资历文件上传功能
+document.addEventListener('DOMContentLoaded', initFileUpload);
+
+// 初始化GitHub功能
+document.addEventListener('DOMContentLoaded', initGitHub);
+
+// 初始化亲家联系功能
+document.addEventListener('DOMContentLoaded', initRelatives);

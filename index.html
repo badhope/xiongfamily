@@ -73,6 +73,9 @@
             <a href="#forum" class="nav-link">家族论坛</a>
             <a href="#search" class="nav-link">谱系查询</a>
             <a href="#wishes" class="nav-link">许愿祈福</a>
+            <a href="#qualifications" class="nav-link">资历文件</a>
+            <a href="#github" class="nav-link">版本控制</a>
+            <a href="#relatives" class="nav-link">亲家联系</a>
           </div>
           <div class="flex items-center gap-4">
             <!-- 语言选择 -->
@@ -131,6 +134,9 @@
           <a href="#forum" class="block py-2 hover:text-gold-400">家族论坛</a>
           <a href="#search" class="block py-2 hover:text-gold-400">谱系查询</a>
           <a href="#wishes" class="block py-2 hover:text-gold-400">许愿祈福</a>
+          <a href="#qualifications" class="block py-2 hover:text-gold-400">资历文件</a>
+          <a href="#github" class="block py-2 hover:text-gold-400">版本控制</a>
+          <a href="#relatives" class="block py-2 hover:text-gold-400">亲家联系</a>
         </div>
       </div>
     </nav>
@@ -587,6 +593,134 @@
       </div>
     </section>
 
+    <!-- 资历文件 -->
+    <section id="qualifications" class="section">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="display-font text-3xl md:text-5xl text-gold-400 mb-4">资历文件</h2>
+          <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mb-4"></div>
+          <p class="text-amber-100/70 text-sm md:text-base">家族成员资历证明 · 数字化管理</p>
+        </div>
+
+        <!-- 上传区域 -->
+        <div class="glass-card rounded-3xl p-6 md:p-8 mb-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center">
+              <i class="fas fa-upload text-ink-900"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl text-gold-300">上传资历文件</h3>
+          </div>
+          <div class="space-y-6">
+            <!-- 拖放区域 -->
+            <div class="border-2 border-dashed border-gold-700/50 rounded-2xl p-8 text-center hover:border-gold-500 transition-colors cursor-pointer" id="dropZone">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gold-400 mb-4"></i>
+              <p class="text-amber-100/80 mb-2">点击或拖拽文件到此处上传</p>
+              <p class="text-amber-100/60 text-sm">支持 PDF、JPG、PNG、DOC 等格式</p>
+              <input type="file" id="fileInput" class="hidden" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            </div>
+            
+            <!-- 上传进度 -->
+            <div class="hidden" id="uploadProgress">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-amber-100/80 text-sm" id="progressFileName">上传中...</span>
+                <span class="text-amber-100/80 text-sm" id="progressPercent">0%</span>
+              </div>
+              <div class="w-full bg-ink-800/50 rounded-full h-2">
+                <div class="bg-gradient-to-r from-gold-500 to-gold-700 h-2 rounded-full transition-all" id="progressBar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 文件列表 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="filesGrid">
+          <!-- 文件卡片将由JS生成 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 版本控制 -->
+    <section id="github" class="section bg-gradient-to-b from-transparent via-ink-800/50 to-transparent">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="display-font text-3xl md:text-5xl text-gold-400 mb-4">版本控制</h2>
+          <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mb-4"></div>
+          <p class="text-amber-100/70 text-sm md:text-base">GitHub代码管理 · 版本控制</p>
+        </div>
+
+        <!-- GitHub配置 -->
+        <div class="glass-card rounded-3xl p-6 md:p-8 mb-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center">
+              <i class="fab fa-github text-ink-900"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl text-gold-300">GitHub配置</h3>
+          </div>
+          <div class="space-y-6">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-gold-300 mb-2 text-sm">仓库URL</label>
+                <input type="text" id="githubRepoUrl" placeholder="https://github.com/username/repo" class="w-full px-4 py-3 rounded-xl bg-ink-800/50 border border-gold-700/30 text-amber-50 placeholder-amber-100/40 focus:outline-none focus:border-gold-500 transition-colors text-sm md:text-base">
+              </div>
+              <div>
+                <label class="block text-gold-300 mb-2 text-sm">分支名称</label>
+                <input type="text" id="githubBranch" placeholder="main" class="w-full px-4 py-3 rounded-xl bg-ink-800/50 border border-gold-700/30 text-amber-50 placeholder-amber-100/40 focus:outline-none focus:border-gold-500 transition-colors text-sm md:text-base">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gold-300 mb-2 text-sm">提交信息</label>
+              <textarea id="githubCommitMessage" placeholder="输入提交信息..." class="w-full px-4 py-3 rounded-xl bg-ink-800/50 border border-gold-700/30 text-amber-50 placeholder-amber-100/40 focus:outline-none focus:border-gold-500 transition-colors resize-none h-24 text-sm md:text-base"></textarea>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="uploadToGitHub()" class="btn btn-primary">
+                <i class="fab fa-github"></i>
+                上传代码
+              </button>
+              <button onclick="checkGitHubStatus()" class="btn btn-secondary">
+                <i class="fas fa-sync-alt"></i>
+                检查状态
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 提交历史 -->
+        <div class="glass-card rounded-3xl p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-jade-600 to-jade-800 flex items-center justify-center">
+              <i class="fas fa-history text-gold-300"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl text-gold-300">提交历史</h3>
+          </div>
+          <div class="space-y-4" id="githubHistory">
+            <!-- 提交历史将由JS生成 -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 亲家联系 -->
+    <section id="relatives" class="section">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="display-font text-3xl md:text-5xl text-gold-400 mb-4">亲家联系</h2>
+          <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mb-4"></div>
+          <p class="text-amber-100/70 text-sm md:text-base">亲家信息管理 · 联系方式</p>
+          <div class="mt-4">
+            <button onclick="openAddRelativeModal()" class="btn btn-primary">
+              <i class="fas fa-plus"></i>
+              添加亲家
+            </button>
+          </div>
+        </div>
+
+        <!-- 亲家列表 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="relativesGrid">
+          <!-- 亲家卡片将由JS生成 -->
+        </div>
+      </div>
+    </section>
+
     <!-- 页脚 -->
     <footer class="footer">
       <div class="max-w-6xl mx-auto">
@@ -608,6 +742,9 @@
           <a href="#forum" class="hover:text-gold-400 transition-colors">家族论坛</a>
           <a href="#search" class="hover:text-gold-400 transition-colors">谱系查询</a>
           <a href="#wishes" class="hover:text-gold-400 transition-colors">许愿祈福</a>
+          <a href="#qualifications" class="hover:text-gold-400 transition-colors">资历文件</a>
+          <a href="#github" class="hover:text-gold-400 transition-colors">版本控制</a>
+          <a href="#relatives" class="hover:text-gold-400 transition-colors">亲家联系</a>
         </div>
         <div class="text-center text-xs text-amber-100/40">
           <p>家族族谱 · 版权所有</p>
