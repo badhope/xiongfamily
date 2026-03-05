@@ -379,7 +379,7 @@ function initAuth() {
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
       // 模拟登录
-      currentUser = { id: 1, name: '赵氏族孙', role: 'member' };
+      currentUser = { id: 1, name: '熊氏族孙', role: 'member' };
       updateUserUI();
       showToast('登录成功！');
     });

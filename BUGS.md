@@ -1,7 +1,7 @@
 # Bug Report
 
 ## Overview
-This document lists all bugs and issues identified during comprehensive functional testing of the赵氏宗族 (Zhao Family) web application.
+This document lists all bugs and issues identified during comprehensive functional testing of the熊氏宗族 (Xiong Family) web application.
 
 ## High Priority Issues
 
@@ -142,4 +142,4 @@ This document lists all bugs and issues identified during comprehensive function
 
 ## Conclusion
 
-The赵氏宗族 web application has a solid foundation with well-implemented core features, but there are several areas that need improvement to provide a complete and polished user experience. Addressing these issues will result in a more functional, user-friendly application that fully meets the needs of family members seeking to explore and manage their family history.
+The熊氏宗族 web application has a solid foundation with well-implemented core features, but there are several areas that need improvement to provide a complete and polished user experience. Addressing these issues will result in a more functional, user-friendly application that fully meets the needs of family members seeking to explore and manage their family history.
